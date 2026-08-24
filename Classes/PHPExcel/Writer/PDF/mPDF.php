@@ -1,10 +1,10 @@
 <?php
 
-/**  Require mPDF library */
-$pdfRendererClassFile = PHPExcel_Settings::getPdfRendererPath() . '/mpdf.php';
-if (file_exists($pdfRendererClassFile)) {
-    require_once $pdfRendererClassFile;
-} else {
+/**
+ * mPDF >= 7 is autoloaded via Composer (namespace Mpdf\Mpdf) and no longer
+ * ships the legacy procedural mpdf.php entry file, so there is nothing to require here.
+ */
+if (!class_exists(\Mpdf\Mpdf::class)) {
     throw new PHPExcel_Writer_Exception('Unable to load PDF Rendering library');
 }
 
@@ -91,7 +91,7 @@ class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPEx
 
 
         //  Create PDF
-        $pdf = new mpdf();
+        $pdf = new \Mpdf\Mpdf();
         $ortmp = $orientation;
         $pdf->_setPageSize(strtoupper($paperSize), $ortmp);
         $pdf->DefOrientation = $orientation;
