@@ -375,13 +375,14 @@ class PHPExcel_Shared_String
      */
     public static function SanitizeUTF8($value)
     {
+        // (string): PHP 8.1+ marca como obsoleto passar null para funções de string.
         if (self::getIsIconvEnabled()) {
-            $value = @iconv('UTF-8', 'UTF-8', $value);
+            $value = @iconv('UTF-8', 'UTF-8', (string) $value);
             return $value;
         }
 
         if (self::getIsMbstringEnabled()) {
-            $value = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+            $value = mb_convert_encoding((string) $value, 'UTF-8', 'UTF-8');
             return $value;
         }
 
@@ -487,11 +488,11 @@ class PHPExcel_Shared_String
     public static function ConvertEncoding($value, $to, $from)
     {
         if (self::getIsIconvEnabled()) {
-            return iconv($from, $to, $value);
+            return iconv($from, $to, (string) $value);
         }
 
         if (self::getIsMbstringEnabled()) {
-            return mb_convert_encoding($value, $to, $from);
+            return mb_convert_encoding((string) $value, $to, $from);
         }
 
         if ($from == 'UTF-16LE') {
@@ -555,6 +556,9 @@ class PHPExcel_Shared_String
      */
     public static function CountCharacters($value, $enc = 'UTF-8')
     {
+        // Célula vazia chega como null; PHP 8.1+ marca null em funções de string como obsoleto.
+        $value = (string) $value;
+
         if (self::getIsMbstringEnabled()) {
             return mb_strlen($value, $enc);
         }
@@ -577,6 +581,8 @@ class PHPExcel_Shared_String
      */
     public static function Substring($pValue = '', $pStart = 0, $pLength = 0)
     {
+        $pValue = (string) $pValue;
+
         if (self::getIsMbstringEnabled()) {
             return mb_substr($pValue, $pStart, $pLength, 'UTF-8');
         }
@@ -597,6 +603,8 @@ class PHPExcel_Shared_String
      */
     public static function StrToUpper($pValue = '')
     {
+        $pValue = (string) $pValue;
+
         if (function_exists('mb_convert_case')) {
             return mb_convert_case($pValue, MB_CASE_UPPER, "UTF-8");
         }
@@ -611,6 +619,8 @@ class PHPExcel_Shared_String
      */
     public static function StrToLower($pValue = '')
     {
+        $pValue = (string) $pValue;
+
         if (function_exists('mb_convert_case')) {
             return mb_convert_case($pValue, MB_CASE_LOWER, "UTF-8");
         }
@@ -626,6 +636,8 @@ class PHPExcel_Shared_String
      */
     public static function StrToTitle($pValue = '')
     {
+        $pValue = (string) $pValue;
+
         if (function_exists('mb_convert_case')) {
             return mb_convert_case($pValue, MB_CASE_TITLE, "UTF-8");
         }
@@ -653,6 +665,8 @@ class PHPExcel_Shared_String
      */
     public static function StrCaseReverse($pValue = '')
     {
+        $pValue = (string) $pValue;
+
         if (self::getIsMbstringEnabled()) {
             $characters = self::mb_str_split($pValue);
             foreach ($characters as &$character) {
